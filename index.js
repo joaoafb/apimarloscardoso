@@ -23,8 +23,8 @@ const agent = new https.Agent({
 
 
 // Carregar os certificados SSL/TLS
-const privateKey = fs.readFileSync('./key.key', 'utf8');
-const certificate = fs.readFileSync('./cert.crt', 'utf8');
+const privateKey = fs.readFileSync('./private.key', 'utf8');
+const certificate = fs.readFileSync('./certificate.crt', 'utf8');
 const credentials = { key: privateKey, cert: certificate };
 
 async function main() {
@@ -63,58 +63,32 @@ app.use(express.static(publicWhats));
 
 
 
-app.use(express.static(publicPath));
 
-const publicDir = path.join(__dirname, './MarlosCardoso-main');
-app.use(express.static(publicDir));
-app.get('/whatsapp', (req, res) => {
-    res.sendFile(path.join(publicWhats, '/index.html'));
-});
+
+
+
 // Rotas do Express
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(publicPath, 'login.html'));
 });
 
 // Rotas do Express
-app.get('/home', (req, res) => {
+app.get('/home-marloscardoso', (req, res) => {
     res.sendFile(path.join(publicPath, 'home.html'));
 });
-app.get('/file', (req, res) => {
+app.get('/file-marloscardoso', (req, res) => {
     res.sendFile(path.join(publicPath, 'file.html'));
 });
 
 
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(publicDir, 'index.html'));
-});
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(publicDir, 'login.html'));
-});
-app.get('/cart', (req, res) => {
-    res.sendFile(path.join(publicDir, 'cart.html'));
-});
-app.get('/pedidos', (req, res) => {
-    res.sendFile(path.join(publicDir, 'pedidos.html'));
-});
+
 app.get('/rastreamento', (req, res) => {
     const externalUrl = 'https://linketrack.com/track';
     res.redirect(externalUrl);
 });
 
-app.get('/shop', (req, res) => {
-    res.sendFile(path.join(publicDir, 'shop.html'));
-});
 
-app.get('/terms', (req, res) => {
-    res.sendFile(path.join(publicDir, 'terms.html'));
-});
-app.get('/detail', (req, res) => {
-    res.sendFile(path.join(publicDir, 'detail.html'));
-});
-app.get('/checkout', (req, res) => {
-    res.sendFile(path.join(publicDir, 'checkout.html'));
-});
 
 // Rotas do Express
 
@@ -127,7 +101,7 @@ function generateToken(user) {
 
 
 
-app.post('/api/marloscardoso/loginadmin', async(req, res) => {
+app.post('/api/loginadmin', async(req, res) => {
     try {
         const { username, password } = req.body;
 
@@ -864,11 +838,11 @@ app.delete('/api/marloscardoso/excluirusuario/:id', async(req, res) => {
 
 // Set your secret key. Remember to switch to your live secret key in production.
 // See your keys here: https://dashboard.stripe.com/apikeys
-const stripe = require('stripe')('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');
+const stripemarloscardoso = require('stripe')('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');
 // Função para criar um link de pagamento com o Stripe
 async function gerarLinkPagamento(preco, descricao, urlSucesso, urlCancelamento) {
     try {
-        const session = await stripe.checkout.sessions.create({
+        const session = await stripemarloscardoso.checkout.sessions.create({
             payment_method_types: ['card'],
             line_items: [{
                 price_data: {
@@ -893,7 +867,7 @@ async function gerarLinkPagamento(preco, descricao, urlSucesso, urlCancelamento)
 }
 
 
-app.put('/api/atualizar-status/:id', async(req, res) => {
+app.put('/api/marloscardoso/atualizar-status/:id', async(req, res) => {
     const pedidoId = req.params.id;
 
     try {
@@ -933,7 +907,7 @@ app.put('/api/atualizar-status/:id', async(req, res) => {
 
 
 
-app.put('/api/payment-failed/:id', async(req, res) => {
+app.put('/api/marloscardoso/payment-failed/:id', async(req, res) => {
     const pedidoId = req.params.id;
 
     try {
@@ -969,7 +943,7 @@ app.put('/api/payment-failed/:id', async(req, res) => {
 });
 
 
-app.put('/api/pedido-postado/:id/:cod', async(req, res) => {
+app.put('/api/marloscardoso/pedido-postado/:id/:cod', async(req, res) => {
     const pedidoId = req.params.id;
     const pedidoCod = req.params.cod;
 
@@ -1023,7 +997,7 @@ app.put('/api/pedido-postado/:id/:cod', async(req, res) => {
 
 
 
-app.put('/api/pagamento-combinar/:id', async(req, res) => {
+app.put('/api/marloscardoso/pagamento-combinar/:id', async(req, res) => {
     const pedidoId = req.params.id;
     console.log(pedidoId)
 
@@ -1075,7 +1049,7 @@ app.put('/api/pagamento-combinar/:id', async(req, res) => {
 
 
 
-app.put('/api/pedido-finalizado/:id', async(req, res) => {
+app.put('/api/marloscardoso/pedido-finalizado/:id', async(req, res) => {
     const pedidoId = req.params.id;
 
 
@@ -1122,7 +1096,7 @@ app.put('/api/pedido-finalizado/:id', async(req, res) => {
     }
 });
 
-app.put('/api/pedido-cancelado/:id', async(req, res) => {
+app.put('/api/marloscardoso/pedido-cancelado/:id', async(req, res) => {
     const pedidoId = req.params.id;
 
 
@@ -1167,7 +1141,7 @@ app.put('/api/pedido-cancelado/:id', async(req, res) => {
         return res.status(500).json({ error: 'Erro ao atualizar o status do pedido.' });
     }
 });
-app.put('/api/pedido-aprovado/:id', async(req, res) => {
+app.put('/api/marloscardoso/pedido-aprovado/:id', async(req, res) => {
     const pedidoId = req.params.id;
 
 

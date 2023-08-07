@@ -36,43 +36,9 @@ function logout() {
 }
 
 
-function home() {
 
 
 
-    const data = {
-        token: sessionStorage.getItem("token"),
-
-    };
-    sendData(data);
-
-
-
-}
-
-async function sendData(data) {
-    try {
-        const response = await fetch("/api/marloscardoso/token", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
-        const result = await response.json();
-
-
-        if (result.message == 'Token Valido') {
-            console.log("Token Valido")
-            document.querySelector('#title-loja').innerHTML = sessionStorage.getItem("loja")
-        } else {
-            location.href = '/'
-        }
-    } catch (error) {
-        console.error("Erro ao enviar dados para o servidor", error);
-    }
-
-}
 
 
 function pagehome() {
@@ -516,7 +482,7 @@ async function pedidoCod() {
 
 
     try {
-        const response = await fetch(`/api/pedido-postado/${pedidoId}/${cod}`, {
+        const response = await fetch(`/api/marloscardoso/pedido-postado/${pedidoId}/${cod}`, {
             method: 'PUT',
         });
 
@@ -563,7 +529,7 @@ async function pedidoFinalizado() {
 
 
     try {
-        const response = await fetch(`/api/pedido-finalizado/${pedidoId}`, {
+        const response = await fetch(`/api/marloscardoso/pedido-finalizado/${pedidoId}`, {
             method: 'PUT',
         });
 
@@ -607,7 +573,7 @@ async function compraAprovada() {
 
 
     try {
-        const response = await fetch(`/api/pedido-aprovado/${pedidoId}`, {
+        const response = await fetch(`/api/marloscardoso/pedido-aprovado/${pedidoId}`, {
             method: 'PUT',
         });
 
@@ -668,7 +634,7 @@ async function cancelPedido() {
 
 
     try {
-        const response = await fetch(`/api/pedido-cancelado/${pedidoId}`, {
+        const response = await fetch(`/api/marloscardoso/pedido-cancelado/${pedidoId}`, {
             method: 'PUT',
         });
 

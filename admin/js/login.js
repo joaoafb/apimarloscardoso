@@ -39,7 +39,7 @@
 
   async function sendData(data) {
       try {
-          const response = await fetch("/api/marloscardoso/loginadmin", {
+          const response = await fetch("/api/loginadmin", {
               method: "POST",
               headers: {
                   "Content-Type": "application/json"
@@ -66,7 +66,7 @@
           }).then((result) => {
               /* Read more about handling dismissals below */
               if (result.dismiss === Swal.DismissReason.timer) {
-                  location.href = '/home'
+                  location.href = '/home-' + sessionStorage.getItem("loja")
               }
           })
 
