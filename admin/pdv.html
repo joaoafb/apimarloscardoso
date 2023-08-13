@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDV</title>
+    <link rel="shortcut icon" href="./1.png" type="image/x-icon">
+
+    <link rel="stylesheet" href="./pdv.css">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://kit.fontawesome.com/2c2c0ee88e.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;700&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Martel+Sans:wght@300;400;800&amp;display=swap">
+    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+
+
+
+</head>
+
+<body>
+    <header>
+        <button onclick="location.href = 'home-marloscardoso'" class="btn btn-light">Voltar ao gerenciador</button> PDV | Marlos Cardoso
+    </header>
+
+    <div class="modal fade" id="phoneModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Número de Telefone</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulário para inserir o número de telefone -->
+                    <form id="enviar-whatsapp">
+                        <div class="form-group">
+                            <label for="phoneInput">Número de Telefone:</label>
+                            <input type="tel" class="form-control" id="phoneWhats" placeholder="Digite o número de telefone">
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="orcamentoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Orçamento de Cliente</h5>
+
+                </div>
+                <div class="modal-body">
+                    <form id="add-pedido">
+                        <div class="form-group">
+                            <label for="nome">Nome:</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="Digite o nome">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cpf">CPF:</label>
+                            <input type="text" class="form-control" id="cpf" placeholder="Digite o CPF">
+                        </div>
+                        <div class="form-group">
+                            <label for="telefone">Telefone:</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="Digite o telefone">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" placeholder="Digite o email">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Valor total:</label>
+                            <input type="number" id="pricetotal" class="form-control" placeholder="Valor total do pedido">
+                        </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Orçamento</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <form id="form" class="card">
+                    <h2 class="mb-4">Ponto de Venda</h2>
+                    <div class="input-group mb-3">
+                        <input autocomplete='off' type="text" class="form-control" id="title" required placeholder="Nome do Produto">
+                    </div>
+                    <div class="input-group mb-3">
+                        <input autocomplete='off' type="number" class="form-control" minlength="1" value="1" id="quantity" required placeholder="Quantidade">
+                        <input autocomplete='off' type="number" class="form-control" required id="price" required placeholder="Valor Unitario">
+                        <input autocomplete='off' type="text" class="form-control" required id="total" disabled placeholder="Valor Total">
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" rows="3" id="observation" placeholder="Observação"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Incluir</button>
+                </form>
+            </div>
+            <div class="col-md-8">
+                <table id="productTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Quantidade</th>
+                            <th>Produto</th>
+                            <th>Valor Unitário</th>
+
+                            <th>Valor Total</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+
+                <div class="text-end">
+                    <h5 id="price-total"></h5>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+
+
+                <button class="btn btn-primary me-2" disabled data-toggle="modal" id="btnFinalizar" data-target="#orcamentoModal">Finalizar Pedido</button>
+                <button class="btn btn-primary me-2" data-toggle="modal" data-target="#phoneModal">Enviar pelo WhatsApp</button>
+                <button class="btn btn-primary me-2" onclick="pdf()">Salvar Orçamento em PDF</button>
+                <button class="btn btn-primary me-2" disabled>Enviar por E-mail</button>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src=https://cdn.jsdelivr.net/momentjs/2.4.0/moment.min.js></script>
+
+    <script src="./js/pdv.js"></script>
+</body>
+
+</html>

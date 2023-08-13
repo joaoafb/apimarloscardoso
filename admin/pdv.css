@@ -1,0 +1,191 @@
+html {
+    position: relative;
+    min-height: 100%;
+    background-color: white !important;
+}
+
+* {
+    transition: 0.2s ease-in-out !important;
+}
+
+ :root {
+    --corpadrao: #004eac;
+}
+
+.btn-primary {
+    background-color: var(--corpadrao) !important;
+    transition: background-color 0.2s ease-in-out !important;
+}
+
+body {
+    padding: 20px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+    margin-bottom: 20px !important;
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+    user-select: none !important;
+    overflow-x: hidden;
+    border-radius: 20px;
+    background-color: #f2f2f2 !important;
+}
+
+header {
+    background-color: var(--corpadrao);
+    color: white;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    padding-top: 10px;
+    position: fixed;
+    text-align: center;
+    display: flex;
+    font-size: 18pt;
+    justify-content: space-evenly;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    z-index: 100;
+}
+
+header h1 {
+    font-size: 17pt;
+}
+
+.container-fluid {
+    padding: 20px;
+    margin-top: 70px;
+}
+
+.ui-helper-hidden-accessible {
+    display: none !important;
+}
+
+.card {
+    border: none;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    border: 1px solid #d1d1d1;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #f8f8f8;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.input-group .form-control {
+    flex: 1;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    border-color: var(--corpadrao);
+    outline: none;
+}
+
+.btn-primary {
+    background-color: #0078d4;
+    border: none;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: #005ba1;
+}
+
+.btn-secondary {
+    background-color: #e0e0e0;
+    border: none;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn-secondary:hover {
+    background-color: #b3b3b3;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+}
+
+.apagar {
+    color: white;
+    background-color: red;
+    border: none;
+    border-radius: 10px;
+    font-size: 10pt;
+    padding: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.apagar:hover {
+    background-color: #c40000;
+}
+
+button {
+    border-radius: 4px !important;
+    padding: 10px !important;
+    border: none !important;
+}
+
+button:hover {
+    background-color: #005ba1 !important;
+}
+
+.ui-menu-item {
+    list-style-type: none;
+    text-decoration: none;
+    width: auto !important;
+}
+
+.ui-menu-item ul {
+    width: 250px;
+}
+
+.ui-menu-item div {
+    background-color: white;
+    cursor: pointer;
+    padding: 10px;
+    width: auto !important;
+}
+
+.ui-menu-item div:hover {
+    color: var(--corpadrao);
+}
+
+.custom-autocomplete input.ui-autocomplete-input {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+
+/* Estilo para a lista de sugestões */
+
+.custom-autocomplete .ui-autocomplete.ui-widget-content {
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-top: none;
+}
+
+
+/* Estilo para cada item de sugestão */
+
+.custom-autocomplete .ui-autocomplete.ui-widget-content .ui-menu-item {
+    padding: 5px;
+    cursor: pointer;
+}
+
+
+/* Estilo para um item de sugestão selecionado */
+
+.custom-autocomplete .ui-autocomplete.ui-widget-content .ui-state-focus {
+    background-color: #e0e0e0;
+}

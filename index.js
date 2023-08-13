@@ -269,6 +269,17 @@ app.post('/api/marloscardoso/pedidos', async(req, res) => {
         res.status(500).json({ message: 'Erro no servidor.' });
     }
 }); // Endpoint para receber os dados do formulário
+
+
+app.post('/api/marloscardoso/orcamento', async(req, res) => {
+        const formData = req.body
+
+
+        sendMessage(formData.phone, formData.message)
+    }
+
+)
+
 app.post('/api/marloscardoso/addpedidos', async(req, res) => {
     try {
         const formData = req.body; // Dados enviados pelo cliente
@@ -277,7 +288,7 @@ app.post('/api/marloscardoso/addpedidos', async(req, res) => {
         const descricaoDoProduto = JSON.stringify(formData.pedido.map(element => element.title));
         const currentUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
         const urlSucesso = 'https://marloscardoso.com/payment.html?id=' + formData.token;
-        const urlCancelamento = 'https://marloscardoso.com/failed.html?id=' + formData.token;
+        const urlCancelamento = 'https://marloscardoso.com/'
 
         // Chama a função para gerar o link de pagamento
         const linkPagamento = await gerarLinkPagamento(precoDoProduto, descricaoDoProduto, urlSucesso, urlCancelamento);
@@ -308,6 +319,9 @@ app.post('/api/marloscardoso/addpedidos', async(req, res) => {
         Olá,
 
         Verificamos que você realizou um pedido no valor de R$${formData.pricetotal} em ${formData.data}.
+
+        Segue link para pagamento via cartão de crédito.
+        ${formData.linkPagamento}
     
         Qualquer dúvida em relação ao pagamento ou entrega, pode entrar em contato pelo telefone/WhatsApp (74) 98827-4544.
     

@@ -375,7 +375,7 @@ function listprodutos() {
                     const titulo = document.querySelector("#titulo")
                     const descricao = document.querySelector("#descricao")
                     const categoria = document.querySelector("#categoria")
-                    const estoque = document.querySelector("#estoque")
+
 
                     const valor = document.querySelector("#valor")
                     const modelo = document.querySelector("#modelo")
@@ -391,7 +391,6 @@ function listprodutos() {
                                 titulo: document.querySelector("#titulo").value,
                                 descricao: document.querySelector("#descricao").value,
                                 categoria: document.querySelector("#categoria").value,
-                                estoque: document.querySelector("#estoque").value,
                                 valor: document.querySelector("#valor").value,
                                 modelo: document.querySelector("#modelo").value,
                                 id: item._id,

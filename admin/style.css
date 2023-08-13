@@ -28,7 +28,6 @@ body {
     font-family: "Libre Franklin", sans-serif !important;
     margin-bottom: 4.5rem;
     user-select: none !important;
-    zoom: 85%;
 }
 
 .form-control:focus {
@@ -243,7 +242,7 @@ ul.navbar-nav li.nav-item a.nav-link {
     align-items: center;
     color: black;
     transition: .2s ease-in-out;
-    border-radius: 10px !important;
+    border-radius: 5px !important;
     height: 45px;
     padding-left: 10px;
 }
