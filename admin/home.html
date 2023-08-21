@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;700&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Martel+Sans:wght@300;400;800&amp;display=swap">
     <link rel="shortcut icon" href="./1.png" type="image/x-icon">
+    
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
 
     <!-- Moment.js CDN -->
@@ -25,6 +26,46 @@
 </head>
 
 <body>
+     <div class="minha-sidebar">
+ <div style="display: flex;flex-direction: row;">
+    <li class="nav-item active" onclick="pagehome()">
+        <a class="nav-link" href="#" title="Página Inicial">
+            <i class="lni lni-home"></i>
+        </a>
+    </li>
+    
+    <li class="nav-item active" title="Ponto de Venda" onclick="pdv()">
+        <a class="nav-link" href="#pdv"><i class="lni lni-coin"></i></a>
+    </li>
+    
+    <li class="nav-item" onclick="pedidos()" title="Pedidos">
+        <a class="nav-link" href="#"><i class="lni lni-cart-full"></i></a>
+    </li>
+    
+    <li class="nav-item" onclick="listprodutos()" title="Produtos">
+        <a class="nav-link" href="#"><i class="lni lni-list"></i></a>
+    </li>
+    
+    <li class="nav-item" title="Rastreamento de Encomendas">
+        <a class="nav-link" href="https://www2.correios.com.br/enderecador/encomendas/default.cfm?etq=1&tipo=rem#form1" target="_blank">
+            <i class="lni lni-delivery"></i>
+        </a>
+    </li>
+    
+    <li class="nav-item" onclick="listcategorias()" title="Categorias">
+        <a class="nav-link" href="#"><i class="lni lni-check-box"></i></a>
+    </li>
+    
+    <li class="nav-item" onclick="clientes()" title="Clientes">
+        <a class="nav-link" href="#"><i class="lni lni-users"></i></a>
+    </li>
+    
+    <li onclick="logout()" class="nav-item" title="Sair">
+        <a class="nav-link" href="#">
+            <i class="lni lni-exit"></i>
+        </a></li>
+    </div>
+  </div>
     <!--MODAL PRODUTO-->
     <div class="modal fade" id="ModalProduto" tabindex="-1" role="dialog" aria-labelledby="meuModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
@@ -184,6 +225,7 @@
             </div>
         </div>
     </div>
+    <datalist id="CategList"></datalist>
 
     <!--FIM MODAL PEDIDO POSTADO-->
     <div class="modal fade" id="ModalDetalhes" tabindex="-1" role="dialog" aria-labelledby="meuModalLabel" aria-hidden="true">
@@ -261,39 +303,46 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto sidenav" id="navAccordion">
 
-                <label for="" style="font-size: 10pt;color: gray;padding-left: 10px;">Loja</label>
 
                 <li class="nav-item active" onclick="pagehome()">
-                    <a class="nav-link" href="#"><i class="lni lni-home"></i>Home<span class="badge text-bg-secondary" id="count-alert">0</span></a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="./pdv.html"><i class="lni lni-coin"></i>PDV</a>
-                </li>
-                <li class="nav-item" onclick="pedidos()">
-                    <a class="nav-link" href="#"><i class="lni lni-cart-full"></i>Pedidos <span class="badge text-bg-secondary" id="count-pedidos">0</span></a>
-                </li>
-                <li class="nav-item" onclick="produtos()">
-                    <a class="nav-link" href="#"><i class="lni lni-list"></i>Produtos</a>
-                </li>
-                <li class="nav-item" onclick="">
-                    <a class="nav-link" href="https://www2.correios.com.br/enderecador/encomendas/default.cfm?etq=1&tipo=rem#form1" target="_blank"><i class="lni lni-delivery"></i>Gerar Etiqueta</a>
-                </li>
-
-                <li class="nav-item" onclick="categorias()">
-                    <a class="nav-link" href="#"><i class="lni lni-check-box"></i>Categorias</a>
-                </li>
-                <li class="nav-item" onclick="clientes()">
-                    <a class="nav-link" href="#"><i class="lni lni-users"></i>Clientes</a>
-                </li>
-
-                <label for="" style="font-size: 10pt;color: gray;padding-left: 10px;">Conta</label>
-                <li onclick="logout()" class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="lni lni-exit"></i> Deslogar
+                    <a class="nav-link" href="#" title="Página Inicial">
+                        <i class="lni lni-home"></i>
                     </a>
                 </li>
+                
+                <li class="nav-item active" title="Ponto de Venda" onclick="pdv()">
+                    <a class="nav-link" href="#pdv"><i class="lni lni-coin"></i></a>
+                </li>
+                
+                <li class="nav-item" onclick="pedidos()" title="Pedidos">
+                    <a class="nav-link" href="#"><i class="lni lni-cart-full"></i></a>
+                </li>
+                
+                <li class="nav-item" onclick="listprodutos()" title="Produtos">
+                    <a class="nav-link" href="#"><i class="lni lni-list"></i></a>
+                </li>
+                
+                <li class="nav-item" title="Rastreamento de Encomendas">
+                    <a class="nav-link" href="https://www2.correios.com.br/enderecador/encomendas/default.cfm?etq=1&tipo=rem#form1" target="_blank">
+                        <i class="lni lni-delivery"></i>
+                    </a>
+                </li>
+                
+                <li class="nav-item" onclick="listcategorias()" title="Categorias">
+                    <a class="nav-link" href="#"><i class="lni lni-check-box"></i></a>
+                </li>
+                
+                <li class="nav-item" onclick="clientes()" title="Clientes">
+                    <a class="nav-link" href="#"><i class="lni lni-users"></i></a>
+                </li>
+                
+                <li onclick="logout()" class="nav-item" title="Sair">
+                    <a class="nav-link" href="#">
+                        <i class="lni lni-exit"></i>
+                    </a>
+                </li>
+                
 
-                <p style="color: gray;padding-left: 10px;padding-top: 30px;">V 1.0.0</p>
 
 
 

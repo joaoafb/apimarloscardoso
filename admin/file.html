@@ -5,6 +5,7 @@
     <title>Formulário de Envio de Imagem</title>
     <!-- Incluindo o Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -18,7 +19,7 @@
                         <label for="imagemInput">Escolha uma imagem:</label>
                         <input type="file" class="form-control-file" id="imagemInput" accept="image/*">
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Enviar</button>
+                   
                 </form>
             </div>
         </div>
@@ -30,36 +31,71 @@
 
 </body>
 <script>
-    document.querySelector("#imagemInput").addEventListener("change", function() {
-        uploadImage()
-    })
+  document.querySelector("#imagemInput").addEventListener("change", function(e) {
+    e.preventDefault();
+    uploadImage();
+});
 
-    function uploadImage() {
-        const fileInput = document.getElementById('imagemInput');
-        const file = fileInput.files[0];
-
-        if (!file) {
-            console.error('Nenhum arquivo selecionado.');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('file', file);
-
-        fetch('/api/marloscardoso/imgprodutomobile', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(url => {
-                console.log('URL da imagem no Firebase:', url.url);
-
-                // Aqui você pode realizar alguma ação após o servidor processar os dados
-            })
-            .catch(error => {
-                console.error('Erro ao enviar a imagem:', error);
-            });
+function generateRandomToken(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let token = '';
+    
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        token += characters[randomIndex];
     }
+    
+    return token;
+}
+
+function uploadImage() {
+    const fileInput = document.getElementById('imagemInput');
+    const file = fileInput.files[0];
+
+    if (!file) {
+        console.error('Nenhum arquivo selecionado.');
+        return;
+    }
+
+    const token = generateRandomToken(5); // Gera o token de 5 caracteres
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('token', token); // Anexa o token ao FormData
+
+    fetch('/api/marloscardoso/imgprodutomobile', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(url => {
+            console.log('URL da imagem no Firebase:', url.url);
+            Swal.fire({
+                icon:'success',
+  title: 'Imagem Encaminhada!',
+  html: "Adicione o código <strong>" + url.token + "</strong> no computador!",
+  
+  showCancelButton: true,
+  confirmButtonColor: '#000',
+  cancelButtonColor: '#000',
+  cancelButtonText: 'Voltar',
+  confirmButtonText: 'Ok'
+}).then((result) => {
+  if (result.isConfirmed) {
+    Swal.fire(
+      'Tudo Certo',
+      '',
+      'success'
+    )
+  }
+})
+
+            // Aqui você pode realizar alguma ação após o servidor processar os dados
+        })
+        .catch(error => {
+            console.error('Erro ao enviar a imagem:', error);
+        });
+}
+
 </script>
 
 </html>

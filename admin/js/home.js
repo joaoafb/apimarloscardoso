@@ -5,23 +5,7 @@ $(document).ready(function() {
     });
 });
 
-function count() {
-    fetch('/api/marloscardoso/listapedidos')
-        .then(response => response.json())
-        .then(data => {
-            const values = Object.values(data);
-            const filteredValues = values.filter(item => item.status !== 'Pedido Cancelado' && item.status !== 'Pedido Finalizado');
-            const length = filteredValues.length;
 
-
-
-            document.querySelector("#count-pedidos").innerHTML = length;
-        })
-        .catch(error => {
-            console.error('Erro ao obter dados:', error);
-        });
-}
-count()
 
 
 
@@ -78,35 +62,7 @@ function pagehome() {
             console.error('Erro ao obter dados:', error);
         });
 
-    fetch('/api/marloscardoso/listprodutos')
-        .then(response => response.json())
-        .then(data => {
-            const values = Object.values(data);
 
-
-
-
-
-            document.querySelector("#countprodutos").innerHTML = values.length + ' Produtos'
-        })
-        .catch(error => {
-            console.error('Erro ao obter dados:', error);
-        });
-
-    fetch('/api/marloscardoso/listclientes')
-        .then(response => response.json())
-        .then(data => {
-            const values = Object.values(data);
-
-
-
-
-
-            document.querySelector("#countclientes").innerHTML = values.length + ' Clientes'
-        })
-        .catch(error => {
-            console.error('Erro ao obter dados:', error);
-        });
     fetch('/api/marloscardoso/listcategorias')
         .then(response => response.json())
         .then(data => {
@@ -364,6 +320,7 @@ function todosprodutos() {
                     Modal.modal("show");
 
                     document.querySelector("#listapedidos").innerHTML = ''
+                    document.querySelector("#price").value = 'R$' + item.pricetotal
                     item.pedido.forEach(pedido => {
 
                         const pedidoDetails = $('#listapedidos');
@@ -379,7 +336,7 @@ function todosprodutos() {
                         const cardBodyContent = $('<div class="card-body">');
                         const cardTitle = $('<h5 class="card-title" id="pedido-title">').text(pedido.title);
                         const cardDescription = $('<p class="card-text" id="pedido-description">').text(pedido.descricao);
-                        document.querySelector("#price").value = 'R$' + pedido.price
+                        
 
 
                         cardBodyContent.append(cardTitle, cardDescription);
@@ -433,17 +390,7 @@ function produtos() {
     `
 }
 
-function categorias() {
-    document.querySelector('.content-wrapper').innerHTML = `
-    <div class="flex menuhorizontal">
-    <div onclick="addcategoria()" class="item-menu"><i class="fas fa-plus"></i></div>
-    <div class="item-menu" onclick="listcategorias()"><i class="fas fa-list"></i></div>
-    <div></div>
-    <div></div>
-    </div>
-   
-    `
-}
+
 
 function clientes() {
     document.querySelector('.content-wrapper').innerHTML = `
@@ -494,7 +441,7 @@ async function pedidoCod() {
         if (data.message == 'Status do pedido atualizado com sucesso.') {
             $("#ModalPostado").modal("hide");
             pedidos()
-            count()
+           
         } else {
             let timerInterval
             Swal.fire({
@@ -541,7 +488,7 @@ async function pedidoFinalizado() {
         if (data.message == 'Status do pedido atualizado com sucesso.') {
             $("#ModalPedido").modal("hide");
             pedidos()
-            count()
+            
         } else {
             let timerInterval
             Swal.fire({
@@ -585,7 +532,7 @@ async function compraAprovada() {
         if (data.message == 'Status do pedido atualizado com sucesso.') {
             $("#ModalPedido").modal("hide");
             pedidos()
-            count()
+            
         } else {
             let timerInterval
             Swal.fire({
@@ -651,7 +598,7 @@ async function cancelPedido() {
             )
             $("#ModalPedido").modal("hide");
             pedidos()
-            count()
+            
         } else {
             let timerInterval
             Swal.fire({

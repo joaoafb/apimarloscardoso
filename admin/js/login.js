@@ -37,43 +37,53 @@
       sendData(data);
   });
 
-  async function sendData(data) {
-      try {
-          const response = await fetch("/api/loginadmin", {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              body: JSON.stringify(data)
-          });
-          const result = await response.json();
-          // Salvar o token no sessionStorage ou localStorage
-          sessionStorage.setItem("token", result.token);
-          sessionStorage.setItem("username", data.username)
-          sessionStorage.setItem("loja", result.loja)
-          sessionStorage.setItem("nome", result.nome)
-          let timerInterval
-          Swal.fire({
-              title: 'Verificando Credenciais...',
-              html: 'Olá, ' + data.username,
-              showConfirmButton: false,
-              timer: 2000,
-              timerProgressBar: true,
+  
+async function sendData(data) {
+    try {
+        const response = await fetch("/api/loginadmin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
 
-              willClose: () => {
-                  clearInterval(timerInterval)
-              }
-          }).then((result) => {
-              /* Read more about handling dismissals below */
-              if (result.dismiss === Swal.DismissReason.timer) {
-                  location.href = '/home-' + sessionStorage.getItem("loja")
-              }
-          })
+        if (response.status === 200) {
+            const result = await response.json();
+            // Salvar o token no sessionStorage ou localStorage
+            sessionStorage.setItem("token", result.token);
+            sessionStorage.setItem("username", data.username)
+            sessionStorage.setItem("loja", result.loja)
+            sessionStorage.setItem("nome", result.nome)
+            let timerInterval
+            Swal.fire({
+                title: 'Seja Bem-Vindo ao GerenciaGL',
+                html: '',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.timer && sessionStorage.getItem("loja") != undefined) {
+                    location.href = '/home-' + sessionStorage.getItem("loja")
+                }
+            });
 
-          checkTokenExpiration();
-          // Ou localStorage.setItem("token", result.token);
-          console.log(result);
-      } catch (error) {
-          console.error("Erro ao enviar dados para o servidor", error);
-      }
-  }
+            checkTokenExpiration();
+            console.log(result);
+        } else if (response.status === 401) {
+            // Erro de autenticação (senha incorreta)
+            Swal.fire({
+                icon: 'error',
+                title: 'Senha incorreta',
+                text: 'A senha fornecida está incorreta. Tente novamente.',
+            });
+        } else {
+            console.error("Erro de autenticação:", response);
+        }
+    } catch (error) {
+        console.error("Erro ao enviar dados para o servidor", error);
+    }
+}

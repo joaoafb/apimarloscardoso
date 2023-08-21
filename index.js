@@ -111,10 +111,10 @@ app.post('/api/loginadmin', async(req, res) => {
 
 
         // Selecionar o banco de dados
-        const db = client.db('usuarios');
+        const db = client.db('GeniusLeap');
 
         // Verificar se o usuário existe na coleção de usuários
-        const user = await db.collection("admin").findOne({ username, password });
+        const user = await db.collection("Admin").findOne({ username, password });
 
         // Fechar a conexão com o MongoDB
         await client.close();
@@ -127,9 +127,9 @@ app.post('/api/loginadmin', async(req, res) => {
             const loja = user.loja
             const nome = user.name
             saveData(token);
-            res.status(200).json({ token, loja, nome });
+            res.status(200).json({message: "autorizado", token, loja, nome });
         } else {
-            res.status(401).json({ message: 'Credenciais inválidas. Tente novamente.' });
+            res.status(401).json({ message: 'negado' });
         }
     } catch (err) {
         console.error('Erro ao processar a solicitação', err);
@@ -245,7 +245,7 @@ app.post('/api/marloscardoso/addproduto', async(req, res) => {
     }
 });
 // Endpoint para receber os dados do formulário
-app.post('/api/marloscardoso/pedidos', async(req, res) => {
+app.post('/api/marloscardoso/pedidos', async (req, res) => {
     try {
         const formData = req.body; // Dados enviados pelo cliente
 
@@ -256,19 +256,29 @@ app.post('/api/marloscardoso/pedidos', async(req, res) => {
         // Selecionar o banco de dados
         const db = client.db('MarlosCardoso');
 
-        // Salvar os dados no MongoDB (coleção Produtos)
+        // Salvar os dados no MongoDB (coleção Pedidos)
         await db.collection('Pedidos').insertOne(formData);
+
+        // Atualizar o estoque do produto associado
+        const productId = formData.id; // Supondo que o campo _id no formData é o ID do produto
+        const product = await db.collection('Produtos').findOne({ _id: productId });
+        
+        if (product) {
+            // Se o produto for encontrado, diminuir 1 no estoque
+            await db.collection('Produtos').updateOne({ _id: productId }, { $inc: { estoque: -1 } });
+        }
 
         // Fechar a conexão com o MongoDB
         await client.close();
 
         // Responder ao cliente com sucesso
-        res.status(200).json({ message: 'Produto Cadastrado' });
+        res.status(200).json({ message: 'Pedido registrado e estoque atualizado' });
     } catch (err) {
         console.error('Erro ao salvar os dados no MongoDB', err);
         res.status(500).json({ message: 'Erro no servidor.' });
     }
-}); // Endpoint para receber os dados do formulário
+});
+ // Endpoint para receber os dados do formulário
 
 
 app.post('/api/marloscardoso/orcamento', async(req, res) => {
@@ -558,15 +568,17 @@ app.post('/api/marloscardoso/imgproduto', upload.single('file'), async(req, res)
 
 
 // Endpoint para receber o upload da imagem
-app.post('/api/marloscardoso/imgprodutomobile', upload.single('file'), async(req, res) => {
+app.post('/api/marloscardoso/imgprodutomobile', upload.single('file'), async (req, res) => {
     try {
         if (!req.file) {
             res.status(400).json({ error: 'Nenhum arquivo enviado.' });
             return;
         }
 
+        const { token } = req.body; // Obtém o token enviado pelo cliente
+
         const file = req.file;
-        const fileName = `${Date.now()}_${file.originalname}`;
+        const fileName = `${token}_${Date.now()}_${file.originalname}`;
         const fileUpload = bucket.file(fileName);
 
         const blobStream = fileUpload.createWriteStream({
@@ -580,23 +592,16 @@ app.post('/api/marloscardoso/imgprodutomobile', upload.single('file'), async(req
             res.status(500).json({ error: 'Erro ao enviar a imagem.' });
         });
 
-
-        blobStream.on('finish', () => {
+        blobStream.on('finish', async () => {
             // Configuração da URL de download da imagem (expira em 1 hora)
             const config = {
                 action: 'read',
                 expires: '01-01-3000',
             };
-            fileUpload.getSignedUrl(config, (err, url) => {
-                if (err) {
-                    console.error('Erro ao gerar a URL da imagem:', err);
-                    res.status(500).json({ error: 'Erro ao enviar a imagem.' });
-                } else {
+            const [url] = await fileUpload.getSignedUrl(config);
 
-                    console.log('Imagem enviada com sucesso.' + url);
-                    res.status(200).json({ url });
-                }
-            });
+            console.log('Imagem enviada com sucesso.', url);
+            res.status(200).json({ url, token }); // Retorna o URL e o token
         });
 
         blobStream.end(file.buffer);
@@ -620,6 +625,7 @@ app.get('/api/marloscardoso/listprodutos', async(req, res) => {
         await client.close();
 
         res.json(dados);
+        console.log(dados)
     } catch (err) {
         console.error('Erro ao consultar os dados:', err);
         res.status(500).json({ error: 'Erro no servidor.' });
@@ -695,11 +701,19 @@ app.get('/api/marloscardoso/listclientes', async(req, res) => {
 
         // Consulta os dados na coleção 'dados' (substitua pelo nome da sua coleção)
         const collection = db.collection('Clientes');
-        const dados = await collection.find().toArray();
+        const clientes = await collection.find().toArray();
+        const dados = clientes.map(cliente => ({
+            _id:cliente._id,
+            nome: cliente.nome,
+            username: cliente.username,
+            email: cliente.email
+        })); // Extrai os campos desejados
+     
 
         await client.close();
 
         res.json(dados);
+        console.log(dados)
     } catch (err) {
         console.error('Erro ao consultar os dados:', err);
         res.status(500).json({ error: 'Erro no servidor.' });

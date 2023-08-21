@@ -1,3 +1,7 @@
+function pdv()
+{
+    window.location.href = './pdv.html'
+}
 function addproduto() {
 
     document.querySelector('.content-wrapper').innerHTML = `
@@ -7,7 +11,10 @@ function addproduto() {
     <li class="breadcrumb-item active" aria-current="page">Adicionar Produtos</li>
     </ol>
   </nav>
-
+  <div class="flex flex-row"
+  <h3>Adicionar Produtos</h3>
+  <button onclick="listprodutos()" style=" height: 40px !important;margin-left:20px" class="btn btn-primary">Lista de Produtos</button>
+ </div><br>
 <div class="row">
   <!-- Lado Esquerdo do Formulário -->
   <div class="col-md-6">
@@ -23,7 +30,10 @@ function addproduto() {
       </div>
       <div class="form-group">
         <label for="categoria">Categoria:</label>
-        <input autocomplete="off" required type="text" class="form-control" id="categoria" placeholder="Digite a categoria do produto">
+        <input autocomplete="off" required type="text" class="form-control" id="categoria" list="CategList" placeholder="Digite a categoria do produto">
+        <datalist id="CategList">
+        <option>teste</option>
+        </datalist>
       </div>
       <div class="form-group">
         <label for="modelo">Modelo:</label>
@@ -44,15 +54,11 @@ function addproduto() {
       <br>
       <label for="">Foto 1: (Obrigatorio)</label>
       <input autocomplete="off" required type="file" class="form-control-file" id="imagemProduto"><br><br>
-      <label for="">Foto 2:</label>
-      <input autocomplete="off"  type="file" class="form-control-file" id="imagemProduto2"><br><br>
-     
-      <label for="">Foto 3:</label>
-      <input autocomplete="off"  type="file" class="form-control-file" id="imagemProduto3"><br><br>
+      
       <div class="form-group" style="display:flex;flex-direction:row;    justify-content: space-between;">
      
       <input autocomplete="off" required type="text" class="form-control" style="width:120px" id="peso" placeholder="Peso.">
-      <input autocomplete="off" required type="text" class="form-control" style="width:150px" id="altura" placeholder="Min. 20cm | Altura.">
+      <input autocomplete="off" required type="text" class="form-control" style="width:150px" id="altura" placeholder="Min. 20cm | Altura."><br>
       <input autocomplete="off" required type="text" class="form-control" style="width:150px" id="largura" placeholder="Min. 20cm | Largura">
       <input autocomplete="off" required type="text" class="form-control" style="width:150px" id="comprimento" placeholder="Min. 20cm | Comprimento">
     </div>
@@ -69,6 +75,19 @@ function addproduto() {
 </div>
 
     `
+    const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timerProgressBar: true,
+    
+  });
+  
+  // Exibir o Toast com um botão de fechar manualmente
+  Toast.fire({
+    icon: 'info',
+    title: 'Requisitando dados...'
+  });
     document.querySelector("#imagemProduto").addEventListener("change", function() {
         setTimeout(() => {
             uploadImage()
@@ -76,21 +95,7 @@ function addproduto() {
 
     })
 
-    document.querySelector("#imagemProduto2").addEventListener("change", function() {
-        setTimeout(() => {
-            uploadImage2()
-        }, 500);
-
-    })
-    document.querySelector("#imagemProduto3").addEventListener("change", function() {
-        setTimeout(() => {
-            uploadImage3()
-        }, 500);
-
-    })
-
-
-
+  
     document.querySelector("#form-produto").addEventListener("submit", function() {
         const titulo = document.querySelector("#titulo").value
         const descricao = document.querySelector("#descricao").value
@@ -115,6 +120,7 @@ function addproduto() {
             img3,
             valor,
             img,
+            estoque: 1,
             peso,
             altura,
             comprimento,
@@ -278,7 +284,10 @@ function listprodutos() {
   <li class="breadcrumb-item active" aria-current="page">Lista de Produtos</li>
   </ol>
 </nav>
-    
+<div class="flex flex-row">
+<h3>Lista de Produtos</h3>
+ <button onclick="addproduto()" style=" height: 40px !important;margin-left:20px" class="btn btn-primary">Adicionar Produto</button>
+</div><br> 
     <div class="divInput">
     <input autocomplete="off" id="searchInput" oninput="filterProdutos()" type="search" autocomplete="off" class="input form-control" placeholder="Pesquise aqui">
     <button class="btnRecarregar btn btn-primary" onclick="listprodutos()"><i class="fas fa-sync-alt"></i></button>
@@ -298,13 +307,26 @@ function listprodutos() {
       <!-- Adicione outras linhas conforme necessário -->
     </tbody>
   </table>`
-
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timerProgressBar: true,
+    
+  });
+  
+  // Exibir o Toast com um botão de fechar manualmente
+  Toast.fire({
+    icon: 'info',
+    title: 'Requisitando dados...'
+  });
 
     fetch('/api/marloscardoso/listprodutos')
         .then(response => response.json())
         .then(data => {
 
             data.forEach(item => {
+                Swal.close()
                 const itemRow = $("<tr>");
 
                 const imgTd = $("<td>").append($("<img>").attr("src", item.img).attr("alt", "Imagem do Produto").attr("width", 50));
@@ -698,9 +720,10 @@ function listcategorias() {
     <li class="breadcrumb-item active" aria-current="page">Lista de Categorias</li>
   </ol>
 </nav>
-  <h1>Lista de Categorias</h1>
-  <input autocomplete="off" id="searchInput" oninput="filterTable()" type="search" autocomplete="off" class="input form-control" placeholder="Pesquise aqui">
-  <table>
+ <div class="flex flex-row">
+ <h3>Lista de Categorias</h3>
+  <button onclick="addcategoria()" style=" height: 40px !important;margin-left:20px" class="btn btn-primary">Adicionar Categoria</button>
+ </div><br> <table>
   <thead>
     <tr>
       <th>Imagem</th>
@@ -714,14 +737,33 @@ function listcategorias() {
     <!-- Adicione outras linhas conforme necessário -->
   </tbody>
 </table>`
-
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timerProgressBar: true,
+    
+  });
+  
+  // Exibir o Toast com um botão de fechar manualmente
+  Toast.fire({
+    icon: 'info',
+    title: 'Requisitando dados...'
+  });
+  
 
 
     fetch('/api/marloscardoso/listcategorias')
         .then(response => response.json())
         .then(data => {
+            
+           
 
             data.forEach(item => {
+                Swal.close();
+
+
+  
                 const itemRow = $("<tr>");
 
                 const imgTd = $("<td>").append($("<img>").attr("src", item.img).attr("alt", "Imagem ").attr("width", 50))
@@ -816,7 +858,10 @@ function addcategoria() {
   <li class="breadcrumb-item active" aria-current="page">Adicionar Categoria</li>
   </ol>
 </nav>
-        
+<div class="flex flex-row">
+<h3>Adicionar Categoria</h3>
+<button onclick="listcategorias()" style=" height: 40px !important;margin-left:20px" class="btn btn-primary">Voltar</button>
+</div>
         <form id="add-categ">
             <div class="form-group">
                 <label for="titulo">Título:</label>

@@ -1,8 +1,30 @@
+function toast(msg,time,ico){
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-end',
+        showConfirmButton: false,
+        timer: time,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
+      
+      Toast.fire({
+        icon: ico,
+        title: msg
+      })
+}
+
 document.querySelector("#quantity").addEventListener("input", function() {
     document.querySelector("#total").value = Number(document.querySelector("#price").value) * Number(document.querySelector("#quantity").value)
 })
 
 $(document).ready(function() {
+
+   
+  
 
     $(document).ready(function() {
         $.ajax({
@@ -180,7 +202,7 @@ document.querySelector("#add-pedido").addEventListener("submit", function(event)
     const Pedido = {
         pedido,
         firstNameInput,
-
+        status: 'Pedido Presencial',
         emailInput,
         phoneInput,
         cpf,
@@ -207,7 +229,8 @@ document.querySelector("#add-pedido").addEventListener("submit", function(event)
                     showConfirmButton: false,
                     timer: 1500
                 })
-                localStorage.removeItem("products")
+               
+                document.querySelector("#btnfechar").click()
 
             }
             // Aqui você pode realizar alguma ação após o servidor processar os dados
@@ -224,7 +247,9 @@ function pdf() {
     window.print();
 }
 
-document.querySelector("#enviar-whatsapp").addEventListener("submit", function() {
+document.querySelector("#enviar-whatsapp").addEventListener("submit", function(event) {
+    event.preventDefault()
+    document.querySelector("#btnFechar").click()
     whatsapp(document.querySelector("#phoneWhats").value)
 })
 
@@ -273,4 +298,5 @@ function whatsapp(phone) {
     .catch(error => {
         console.error("Erro ao enviar dados:", error);
     })
+    toast("Orçamento encaminhado", 3000, 'success')
 }

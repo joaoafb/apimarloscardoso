@@ -15,9 +15,7 @@ html {
     background-color: var(--corpadrao) !important;
 }
 
-.nav-link i {
-    padding-right: 15px;
-}
+
 
 .text-bg-secondary {
     background-color: var(--corpadrao) !important;
@@ -69,6 +67,19 @@ nav {
     padding-left: 20px;
 }
 
+.nav-link{
+    width: 50px;
+    margin: 0 auto;
+   
+}
+.nav-item{
+    margin-bottom: 5px !important;
+}
+.nav-link i{
+    margin: 0 auto;
+    transform: scale(1.4);
+    
+}
 .item-menu {
     width: 150px;
     height: 150px;
@@ -123,19 +134,21 @@ nav {
 #select {
     border: 1px solid #21252945;
     width: 150px;
-    height: 40px;
+    height: 55px;
     border-radius: 5px;
     margin-left: 5px;
 }
 
 .content-wrapper {
-    width: 80%;
+    width: 90%;
     padding: 10px;
-    margin-top: -12px;
-    margin-left: 250px !important;
+    margin-top: -21px;
+    padding: 10px;
+    margin-left: 90px !important;
     margin-right: 10px;
     overflow-y: auto;
     border-radius: 10px;
+ 
 }
 
 table {
@@ -173,9 +186,9 @@ input:focus {
 }
 
 .input {
-    height: 40px;
+    height: 40px !important;
     outline: none;
-    width: 100%;
+    width: 200px;
     margin-bottom: 10px;
 }
 
@@ -217,10 +230,19 @@ tr button {
 tr {
     margin-bottom: 10px;
 }
-
+.nav-item{
+    display: flex;
+    justify-content: center !important;
+    margin: 0 auto;
+}
+.nav-link{
+    margin: 0 auto !important;
+    padding: 0 auto !important;
+}
 #navAccordion {
     margin: 10px !important;
-    margin-top: 60px !important;
+    width: auto;
+    margin-top: 10% !important;
     border: 1px solid #343a4010;
     height: auto !important;
     padding: 10px !important;
@@ -245,6 +267,10 @@ ul.navbar-nav li.nav-item a.nav-link {
     border-radius: 5px !important;
     height: 45px;
     padding-left: 10px;
+}
+
+.cancelado {
+    color: red;
 }
 
 ul.navbar-nav li.nav-item:active a.nav-link {
@@ -275,7 +301,40 @@ tr:nth-child(even) {
     color: white;
 }
 
+  .minha-sidebar {
+   
+    position: fixed;
+    bottom: 0;
+    display: none;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+   
+    color: #fff;
+    padding: 20px;
+    transition: .2s ease-in-out !important; 
+    text-align: center;
+  }
+  .minha-sidebar li{
+    transition: .2s ease-in-out !important;
+       color: black;
+  }
+  .minha-sidebar li:hover{
+    color: gray;
+  }
+
+  @media (max-width: 992px){
+
+    .minha-sidebar{
+        z-index: 9999;
+        display: flex;
+    }
+   
+  }
+ 
 @media (min-width: 992px) {
+   
+   
     .sidenav {
         position: absolute;
         top: 0;
