@@ -127,7 +127,7 @@ app.post('/api/loginadmin', async(req, res) => {
             const loja = user.loja
             const nome = user.name
             saveData(token);
-            res.status(200).json({message: "autorizado", token, loja, nome });
+            res.status(200).json({ message: "autorizado", token, loja, nome });
         } else {
             res.status(401).json({ message: 'negado' });
         }
@@ -245,7 +245,7 @@ app.post('/api/marloscardoso/addproduto', async(req, res) => {
     }
 });
 // Endpoint para receber os dados do formulário
-app.post('/api/marloscardoso/pedidos', async (req, res) => {
+app.post('/api/marloscardoso/pedidos', async(req, res) => {
     try {
         const formData = req.body; // Dados enviados pelo cliente
 
@@ -262,7 +262,7 @@ app.post('/api/marloscardoso/pedidos', async (req, res) => {
         // Atualizar o estoque do produto associado
         const productId = formData.id; // Supondo que o campo _id no formData é o ID do produto
         const product = await db.collection('Produtos').findOne({ _id: productId });
-        
+
         if (product) {
             // Se o produto for encontrado, diminuir 1 no estoque
             await db.collection('Produtos').updateOne({ _id: productId }, { $inc: { estoque: -1 } });
@@ -273,12 +273,17 @@ app.post('/api/marloscardoso/pedidos', async (req, res) => {
 
         // Responder ao cliente com sucesso
         res.status(200).json({ message: 'Pedido registrado e estoque atualizado' });
+        sendMessage("74988274544", `
+        Você tem um novo pedido à processar!
+        
+        Att: Genius
+        `)
     } catch (err) {
         console.error('Erro ao salvar os dados no MongoDB', err);
         res.status(500).json({ message: 'Erro no servidor.' });
     }
 });
- // Endpoint para receber os dados do formulário
+// Endpoint para receber os dados do formulário
 
 
 app.post('/api/marloscardoso/orcamento', async(req, res) => {
@@ -331,7 +336,7 @@ app.post('/api/marloscardoso/addpedidos', async(req, res) => {
         Verificamos que você realizou um pedido no valor de R$${formData.pricetotal} em ${formData.data}.
 
         Segue link para pagamento via cartão de crédito.
-        ${formData.linkPagamento}
+        www.marloscardoso.com/pay?id= + ${formData.token}
     
         Qualquer dúvida em relação ao pagamento ou entrega, pode entrar em contato pelo telefone/WhatsApp (74) 98827-4544.
     
@@ -482,8 +487,8 @@ app.post('/api/marloscardoso/cadastrocliente', async(req, res) => {
         const db = client.db('MarlosCardoso');
 
         // Verificar se o usuário existe na coleção de usuários
-        const { username } = formData;
-        const usuarioExistente = await db.collection("Clientes").findOne({ username });
+        const { username, email, cpf } = formData;
+        const usuarioExistente = await db.collection("Clientes").findOne({ username, email, cpf });
 
         if (usuarioExistente) {
             res.status(401).json({ message: 'Usuário/Email Indisponível!' });
@@ -493,6 +498,23 @@ app.post('/api/marloscardoso/cadastrocliente', async(req, res) => {
 
 
             res.status(200).json({ message: 'Cadastrado' });
+            sendMessage(formData.numero, `
+            👔 Bem-vindo à Moda Masculina de Luxo! 👞🕶️
+
+            Caro Cliente,
+
+            Damos as boas-vindas à nossa seleção exclusiva de moda masculina de luxo! Estamos entusiasmados por tê-lo aqui.
+            Descubra peças refinadas, desde ternos elegantes a acessórios sofisticados, tudo escolhido para aprimorar seu estilo. Nossa equipe está pronta para ajudar, garantindo uma experiência de compra excepcional.
+            Obrigado por escolher a nossa loja para expressar sua elegância.
+            
+            Saudações,
+        
+            Atenciosamente,
+            Marlos Cardoso
+            www.marloscardoso.com
+            @marloscard
+          `)
+
         }
 
         // Fechar a conexão com o MongoDB
@@ -568,7 +590,7 @@ app.post('/api/marloscardoso/imgproduto', upload.single('file'), async(req, res)
 
 
 // Endpoint para receber o upload da imagem
-app.post('/api/marloscardoso/imgprodutomobile', upload.single('file'), async (req, res) => {
+app.post('/api/marloscardoso/imgprodutomobile', upload.single('file'), async(req, res) => {
     try {
         if (!req.file) {
             res.status(400).json({ error: 'Nenhum arquivo enviado.' });
@@ -592,7 +614,7 @@ app.post('/api/marloscardoso/imgprodutomobile', upload.single('file'), async (re
             res.status(500).json({ error: 'Erro ao enviar a imagem.' });
         });
 
-        blobStream.on('finish', async () => {
+        blobStream.on('finish', async() => {
             // Configuração da URL de download da imagem (expira em 1 hora)
             const config = {
                 action: 'read',
@@ -620,12 +642,13 @@ app.get('/api/marloscardoso/listprodutos', async(req, res) => {
 
         // Consulta os dados na coleção 'dados' (substitua pelo nome da sua coleção)
         const collection = db.collection('Produtos');
+        // const dados = await collection.find({}, { projection: { id: 0, _id: 0 } }).toArray();
         const dados = await collection.find().toArray();
-
         await client.close();
 
         res.json(dados);
-        console.log(dados)
+
+
     } catch (err) {
         console.error('Erro ao consultar os dados:', err);
         res.status(500).json({ error: 'Erro no servidor.' });
@@ -703,12 +726,12 @@ app.get('/api/marloscardoso/listclientes', async(req, res) => {
         const collection = db.collection('Clientes');
         const clientes = await collection.find().toArray();
         const dados = clientes.map(cliente => ({
-            _id:cliente._id,
+            _id: cliente._id,
             nome: cliente.nome,
             username: cliente.username,
             email: cliente.email
         })); // Extrai os campos desejados
-     
+
 
         await client.close();
 
@@ -1273,4 +1296,25 @@ app.post('/calcularFrete', (req, res) => {
             console.error('Erro ao calcular frete:', error);
             res.status(500).json({ error: 'Erro ao calcular frete' });
         });
+});
+
+
+app.get('/api/marloscardoso/pedidos-client', async(req, res) => {
+    try {
+        const client = new MongoClient(uri, { useUnifiedTopology: true });
+        await client.connect();
+
+        const db = client.db('MarlosCardoso'); // Substitua pelo nome do seu banco de dados
+
+        // Consulta os dados na coleção 'Pedidos' (substitua pelo nome da sua coleção)
+        const collection = db.collection('Pedidos');
+        const dados = await collection.find().project({ _id: 0, token: 1, linkPagamento: 1 }).toArray();
+
+        await client.close();
+
+        res.json(dados);
+    } catch (err) {
+        console.error('Erro ao consultar os dados:', err);
+        res.status(500).json({ error: 'Erro no servidor.' });
+    }
 });
