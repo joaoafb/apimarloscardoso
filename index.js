@@ -219,7 +219,7 @@ app.post('/api/marloscardoso/token', async(req, res) => {
 
 
 
-// Endpoint para receber os dados do formulário
+
 app.post('/api/marloscardoso/addproduto', async(req, res) => {
     try {
         const formData = req.body; // Dados enviados pelo cliente
@@ -1316,5 +1316,132 @@ app.get('/api/marloscardoso/pedidos-client', async(req, res) => {
     } catch (err) {
         console.error('Erro ao consultar os dados:', err);
         res.status(500).json({ error: 'Erro no servidor.' });
+    }
+});
+
+
+//GENIUS
+
+app.get('/genius/usuarios', async(req, res) => {
+    try {
+        const client = new MongoClient(uri, { useUnifiedTopology: true });
+        await client.connect();
+
+        const db = client.db("GeniusLeap");
+
+        const collection = db.collection('Admin');
+        const adminData = await collection.find().project({ password: 0 }).toArray();
+
+        client.close();
+
+        res.json(adminData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Erro ao buscar os dados do admin.' });
+    }
+});
+
+
+app.post('/genius/adduser', async(req, res) => {
+    try {
+        const formData = req.body; // Dados enviados pelo cliente
+
+        // Conectar ao MongoDB
+        const client = new MongoClient(uri, { useUnifiedTopology: true });
+        await client.connect();
+
+        // Selecionar o banco de dados
+        const db = client.db('GeniusLeap');
+
+        // Salvar os dados no MongoDB (coleção Produtos)
+        await db.collection('Admin').insertOne(formData);
+
+        // Fechar a conexão com o MongoDB
+        await client.close();
+
+        // Responder ao cliente com sucesso
+        res.status(200).json({ message: 'Usuario Cadastrado' });
+    } catch (err) {
+        console.error('Erro ao salvar os dados no MongoDB', err);
+        res.status(500).json({ message: 'Erro no servidor.' });
+    }
+});
+
+app.delete('/genius/deleteuser/', async(req, res) => {
+    try {
+        const { iduser } = req.body
+        console.log(iduser)
+
+        // Verifica se o ID fornecido é um ObjectId válido do MongoDB
+        if (!ObjectId.isValid(iduser)) {
+            return res.status(400).json({ message: 'ID inválido.' });
+        }
+        const client = new MongoClient(uri);
+
+        await client.connect();
+        const collection = client.db("GeniusLeap").collection('Admin');
+
+        const result = await collection.deleteOne({ _id: new ObjectId(iduser) });
+
+        if (result.deletedCount === 1) {
+            return res.json({ message: 'Apagado' });
+        } else {
+            return res.status(404).json({ message: 'Inexistente' });
+        }
+    } catch (err) {
+        console.error('Erro ao apagar produto:', err);
+        res.status(500).json({ message: 'Erro ao apagar produto.' });
+    } finally {
+
+    }
+});
+
+
+
+app.post('/api/gestaogl/addproduto', async(req, res) => {
+    try {
+        const formData = req.body; // Dados enviados pelo cliente
+
+        // Conectar ao MongoDB
+        const client = new MongoClient(uri, { useUnifiedTopology: true });
+        await client.connect();
+
+        // Selecionar o banco de dados
+        const db = client.db('GestãoGL');
+
+        // Salvar os dados no MongoDB (coleção Produtos)
+        await db.collection('Produtos').insertOne(formData);
+
+        // Fechar a conexão com o MongoDB
+        await client.close();
+
+        // Responder ao cliente com sucesso
+        res.status(200).json({ message: 'Produto Cadastrado' });
+    } catch (err) {
+        console.error('Erro ao salvar os dados no MongoDB', err);
+        res.status(500).json({ message: 'Erro no servidor.' });
+    }
+});
+
+app.get('/api/gestaogl/getprodutos', async(req, res) => {
+    try {
+        // Conectar ao MongoDB
+        const client = new MongoClient(uri, { useUnifiedTopology: true });
+        await client.connect();
+
+        // Selecionar o banco de dados
+        const db = client.db('GestãoGL');
+
+        // Selecionar a coleção de Produtos e buscar os dados
+        const produtos = await db.collection('Produtos').find({}).toArray();
+
+        // Fechar a conexão com o MongoDB
+        await client.close();
+
+        // Responder ao cliente com os dados obtidos
+        res.status(200).json(produtos);
+    } catch (err) {
+        console.error('Erro ao buscar os dados no MongoDB', err);
+        res.status(500).json({ message: 'Erro no servidor.' });
     }
 });
